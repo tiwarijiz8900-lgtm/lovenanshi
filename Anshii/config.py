@@ -112,3 +112,77 @@ SHOP_ITEMS = [
     {"id": "galaxy", "name": "🌌 Milky Way", "price": 5000000000, "type": "flex", "buff": 0},
     {"id": "blackhole", "name": "🕳️ Black Hole", "price": 9999999999, "type": "flex", "buff": 0},
 ]
+
+# =========================
+# ❤️ RELATIONSHIP / LOVE SYSTEM
+# =========================
+
+AUTO_MARRIAGE_ENABLED = True
+JEALOUS_MODE_ENABLED = True
+BREAKUP_MODE_ENABLED = True
+RELATIONSHIP_XP_BONUS = 50
+AUTO_PROPOSAL_CHANCE = 0.05   # 5% chance per chat
+
+
+# =========================
+# 🧠 XP / LEVEL SYSTEM
+# =========================
+
+XP_PER_MESSAGE = 5
+XP_PER_COUPLE_GAME = 50
+XP_PER_BATTLE_WIN = 100
+XP_COOLDOWN_SECONDS = 60
+
+LEVEL_MULTIPLIER = 1.5
+
+
+# =========================
+# 🏆 LEADERBOARD
+# =========================
+
+LEADERBOARD_LIMIT = 10
+LEADERBOARD_REFRESH_TIME = 300  # seconds
+
+
+# =========================
+# 💎 SUBSCRIPTION / PREMIUM
+# =========================
+
+PREMIUM_MONTHLY_COST = 199
+PREMIUM_YEARLY_COST = 999
+
+PREMIUM_FEATURES = [
+    "jealous_mode",
+    "auto_marriage",
+    "dating_rooms",
+    "couple_battle",
+    "memory_boost",
+    "ai_priority_reply"
+]
+
+
+# =========================
+# 🧠 MEMORY / LOGGER
+# =========================
+
+MEMORY_LIMIT_FREE = 20
+MEMORY_LIMIT_PREMIUM = 100
+
+SAVE_RELATIONSHIP_MEMORY = True
+SAVE_CHAT_MEMORY = True
+
+LOG_RELATIONSHIPS = True
+LOG_PREMIUM_ACTIONS = True
+
+
+# =========================
+# 🤖 AI / GIRLFRIEND MODE
+# =========================
+
+AI_GIRLFRIEND_MODE = True
+AI_FLIRT_LEVEL = "HIGH"   # LOW | MEDIUM | HIGH
+AI_REPLY_DELAY = (1, 3)   # seconds (min, max)
+
+INDIAN_GIRLFRIEND_STYLE = True
+UNLIMITED_AUTO_REPLY = True
+
