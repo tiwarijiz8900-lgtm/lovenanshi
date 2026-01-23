@@ -15,6 +15,7 @@ groups_collection = db["groups"]               # group settings
 sudoers_collection = db["sudoers"]             # sudo admins
 chatbot_collection = db["chatbot"]             # AI chat history
 riddles_collection = db["riddles"]             # riddles
+relationship_collection = db.relationships
 
 # ===============================
 # 🔐 SUBSCRIPTION / PREMIUM
