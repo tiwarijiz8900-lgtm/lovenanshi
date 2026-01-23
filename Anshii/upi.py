@@ -6,19 +6,20 @@ pending_payments = {}
 
 async def buy_premium(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
+text = f"""
+💎 *Premium Plans*
 
-    msg = f"""
-💎 *Premium Plan*
+🔹 Monthly – ₹99 (30 days)
+🔹 Yearly – ₹999 (365 days)
 
-💰 Amount: ₹99  
 📌 Pay via UPI
+━━━━━━━━━━━━━━
+🆔 `{UPI_ID}`
+━━━━━━━━━━━━━━
 
-👉 UPI ID:
-`{UPI_ID}`
-
-📛 Name: {UPI_NAME}
-
-Payment ke baad *UTR / Transaction ID* bhejo 👇
+Payment ke baad UTR bhejo
+Aur plan likho:
+👉 monthly / yearly
 """
     await update.message.reply_text(msg, parse_mode="Markdown")
     pending_payments[user.id] = True
