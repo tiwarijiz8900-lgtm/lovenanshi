@@ -5,6 +5,7 @@ from telegram.ext import ContextTypes
 from telegram.constants import ChatAction, ChatType
 from anshi.jealous import jealous_reply
 from anshi.mood import mood_reply
+from Anshi.payments.upi import buy_premium, submit_utr
 
 from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
 from anshi.database import chatbot_collection
@@ -153,3 +154,10 @@ async def ask_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply = f"{reply}\n\n{mood_text}"
 
     await update.message.reply_text(stylize_text(reply))
+
+application.add_handler(CommandHandler("start", start))
+application.add_handler(CommandHandler("buy", buy_premium))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, submit_utr))
+application.add_handler(MessageHandler(filters.TEXT, chatbot_reply))
+
+application.run_polling()
