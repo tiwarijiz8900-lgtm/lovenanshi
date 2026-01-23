@@ -9,6 +9,7 @@ from telegram.constants import ParseMode, ChatType
 from anshi.couple_games import couple_game
 from anshi.couple_battle import couple_battle
 from anshi.auto_marriage import auto_propose, proposal_callback
+from anshi.breakup import breakup, breakup_callback
 
 
 from anshi.config import (
@@ -269,5 +270,9 @@ def register_couple_games(application):
     application.add_handler(CommandHandler("battle", couple_battle))
     application.add_handler(CommandHandler("propose", auto_propose))
     application.add_handler(CallbackQueryHandler(proposal_callback, pattern="^(accept_|reject_)"))
+application.add_handler(CommandHandler("breakup", breakup))
+application.add_handler(
+    CallbackQueryHandler(breakup_callback, pattern="^break_")
+)
 
 
