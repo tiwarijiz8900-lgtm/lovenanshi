@@ -11,6 +11,7 @@ from anshi.couple_battle import couple_battle
 from anshi.auto_marriage import auto_propose, proposal_callback
 from anshi.breakup import breakup, breakup_callback
 from baka.patchup import patchup, patchup_callback
+from baka.xp_leaderboard import my_xp, xp_leaderboard
 
 
 from anshi.config import (
@@ -280,5 +281,8 @@ application.add_handler(CommandHandler("patchup", patchup))
 application.add_handler(
     CallbackQueryHandler(patchup_callback, pattern="^patch_")
 )
+application.add_handler(CommandHandler("xp", my_xp))
+application.add_handler(CommandHandler("xplb", xp_leaderboard))
+
 
 
