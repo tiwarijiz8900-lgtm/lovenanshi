@@ -1,34 +1,39 @@
 import os
-import time
 
-# Track Uptime
-START_TIME = time.time()
+# ================= BASIC =================
+BOT_NAME = os.getenv("BOT_NAME", "LoveNanshi")
+OWNER_ID = int(os.getenv("OWNER_ID", "123456789"))  # admin telegram id
 
-# Env Variables
-TOKEN = os.getenv("BOT_TOKEN")
+# ================= TELEGRAM =================
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+# ================= DATABASE =================
 MONGO_URI = os.getenv("MONGO_URI")
-MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY", "")
-PORT = int(os.environ.get("PORT", 5000))
 
-# Updater Config
-UPSTREAM_REPO = os.getenv("UPSTREAM_REPO", "")
-GIT_TOKEN = os.getenv("GIT_TOKEN", "")
+# ================= AI ENGINE =================
+MISTRAL_API_KEY = os.getenv("MISTRAL_API_KEY")
+MODEL_NAME = os.getenv("MODEL_NAME", "mistral-free-latest")
 
-# Images & Links
-START_IMG_URL = os.getenv("START_IMG_URL", "https://telegra.ph/file/5e5480760e412bd402e88.jpg") 
-HELP_IMG_URL = os.getenv("HELP_IMG_URL", "https://files.catbox.moe/5g37fy.jpg") 
-WELCOME_IMG_URL = os.getenv("WELCOME_IMG_URL", "https://files.catbox.moe/gyi5iu.jpg") 
+# ================= PAYMENT / UPI =================
+UPI_ID = os.getenv("UPI_ID", "yourupi@paytm")
+UPI_NAME = os.getenv("UPI_NAME", "LoveNanshi Premium")
 
-SUPPORT_GROUP = os.getenv("SUPPORT_GROUP", "https://t.me/ShreyaBotSupport")
-SUPPORT_CHANNEL = os.getenv("SUPPORT_CHANNEL", "https://t.me/ShreyaBots")
-OWNER_LINK = os.getenv("OWNER_LINK", "https://t.me/WTF_Phantom")
+# ================= SUBSCRIPTION =================
+MONTHLY_PRICE = int(os.getenv("MONTHLY_PRICE", "99"))
+YEARLY_PRICE = int(os.getenv("YEARLY_PRICE", "999"))
 
-# IDs
-try: LOGGER_ID = int(os.getenv("LOGGER_ID", "0").strip())
-except: LOGGER_ID = 0
-try: OWNER_ID = int(os.getenv("OWNER_ID", "0").strip())
-except: OWNER_ID = 0
-SUDO_IDS_STR = os.getenv("SUDO_IDS", "")
+PLANS = {
+    "monthly": 30,
+    "yearly": 365
+}
+
+# ================= LOGGER =================
+LOGGER_GROUP = int(os.getenv("LOGGER_GROUP", "0"))  # optional
+
+# ================= OTHER SETTINGS =================
+AUTO_REPLY = True
+PREMIUM_ONLY_FLIRT = True
+
 
 # Game Constants
 BOT_NAME = "🫧 ʙᴀᴋᴀ ×͜࿐"
