@@ -10,6 +10,7 @@ from anshi.couple_games import couple_game
 from anshi.couple_battle import couple_battle
 from anshi.auto_marriage import auto_propose, proposal_callback
 from anshi.breakup import breakup, breakup_callback
+from baka.patchup import patchup, patchup_callback
 
 
 from anshi.config import (
@@ -273,6 +274,11 @@ def register_couple_games(application):
 application.add_handler(CommandHandler("breakup", breakup))
 application.add_handler(
     CallbackQueryHandler(breakup_callback, pattern="^break_")
+)
+
+application.add_handler(CommandHandler("patchup", patchup))
+application.add_handler(
+    CallbackQueryHandler(patchup_callback, pattern="^patch_")
 )
 
 
