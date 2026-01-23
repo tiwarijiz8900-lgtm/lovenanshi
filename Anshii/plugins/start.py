@@ -6,8 +6,10 @@ from telegram import (
 )
 from telegram.ext import ContextTypes, CommandHandler
 from telegram.constants import ParseMode, ChatType
+from anshi.couple_games import couple_game
+from baka.couple_battle import couple_battle
 
-from baka.config import (
+from anshi.config import (
     BOT_NAME,
     START_IMG_URL,
     HELP_IMG_URL,
@@ -15,7 +17,7 @@ from baka.config import (
     SUPPORT_CHANNEL,
     OWNER_LINK,
 )
-from baka.utils import (
+from anshi.utils import (
     ensure_user_exists,
     get_mention,
     track_group,
@@ -24,7 +26,7 @@ from baka.utils import (
 )
 
 # 🎮 COUPLE GAMES IMPORTS
-from baka.couple_games import (
+from anahi.couple_games import (
     love_quiz,
     truth,
     dare,
@@ -260,3 +262,10 @@ def register_couple_games(application):
     application.add_handler(CommandHandler("truth", truth))
     application.add_handler(CommandHandler("dare", dare))
     application.add_handler(CommandHandler("lovescore", love_score))
+    application.add_handler(CommandHandler("ask", ask_ai))
+    application.add_handler(CommandHandler("couple", couple_game))
+    application.add_handler(CommandHandler("battle", couple_battle))
+
+
+
+
