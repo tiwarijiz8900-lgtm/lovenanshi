@@ -13,7 +13,7 @@ from anshi.breakup import breakup, breakup_callback
 from anshi.patchup import patchup, patchup_callback
 from anshi.xp_leaderboard import my_xp, xp_leaderboard
 from anshi.premium import my_plan
-from baka.payments import buy, payment_callback
+from anshi.payments import buy, payment_callback
 
 from anshi.config import (
     BOT_NAME,
