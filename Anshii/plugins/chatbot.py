@@ -11,13 +11,13 @@ from anshi.database import chatbot_collection
 from anshi.utils import stylize_text
 
 # 🔥 XP SYSTEM
-from baka.xp_system import award_xp
+from anshi.xp_system import award_xp
 
 # 😌 MOOD SYSTEM
-from baka.mood import mood_reply
+from anshi.mood import mood_reply
 
 # 😒 JEALOUS MODE
-from baka.jealous import jealous_reply
+from anshi.jealous import jealous_reply
 
 # ================= SETTINGS =================
 MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions"
