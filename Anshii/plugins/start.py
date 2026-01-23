@@ -4,7 +4,7 @@ from telegram import (
     InlineKeyboardButton,
     InputMediaPhoto,
 )
-from telegram.ext import ContextTypes
+from telegram.ext import ContextTypes, CommandHandler
 from telegram.constants import ParseMode, ChatType
 
 from baka.config import (
@@ -21,6 +21,14 @@ from baka.utils import (
     track_group,
     log_to_channel,
     SUDO_USERS,
+)
+
+# 🎮 COUPLE GAMES IMPORTS
+from baka.couple_games import (
+    love_quiz,
+    truth,
+    dare,
+    love_score,
 )
 
 # =========================
@@ -201,58 +209,38 @@ async def help_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if data == "help_social":
         text = (
             "💍 <b>Love & Relationship</b> 💕\n\n"
-            "➤ <b>/propose @user</b> — Cute proposal 💌\n"
-            "➤ <b>/marry</b> — Relationship status 🥰\n"
-            "➤ <b>/divorce</b> — Breakup 💔\n"
-            "➤ <b>/couple</b> — Matchmaking ✨"
+            "➤ /propose — Cute proposal 💌\n"
+            "➤ /marry — Relationship status 🥰\n"
+            "➤ /divorce — Breakup 💔\n"
+            "➤ /couple — Matchmaking ✨\n\n"
+            "🎮 Couple Games:\n"
+            "➤ /lovequiz\n"
+            "➤ /truth\n"
+            "➤ /dare\n"
+            "➤ /lovescore"
         )
 
     elif data == "help_economy":
         text = (
             "💰 <b>Economy & Rewards</b>\n\n"
-            "➤ <b>/bal</b> — Wallet & Rank\n"
-            "➤ <b>/shop</b> — Buy items 🛒\n"
-            "➤ <b>/give</b> — Send coins 💸\n"
-            "➤ <b>/daily</b> — Daily reward 🎁\n"
-            "➤ <b>/ranking</b> — Leaderboard 🏆"
+            "➤ /daily — Daily reward 🎁\n"
+            "➤ /leaderboard — XP Ranking 🏆"
         )
 
     elif data == "help_rpg":
-        text = (
-            "⚔️ <b>RPG & Battles</b>\n\n"
-            "➤ <b>/kill</b> — Attack enemy 🔪\n"
-            "➤ <b>/rob</b> — Steal coins 🕵️\n"
-            "➤ <b>/protect</b> — Shield 🛡️\n"
-            "➤ <b>/revive</b> — Revive 💉"
-        )
+        text = "⚔️ RPG battles coming soon 🔥"
 
     elif data == "help_fun":
-        text = (
-            "🧠 <b>AI & Fun</b> 🤖💖\n\n"
-            "➤ <b>/chatbot</b> — Girlfriend mode 😘\n"
-            "➤ <b>/draw</b> — AI art 🎨\n"
-            "➤ <b>/speak</b> — Voice 🎤\n"
-            "➤ <b>/riddle</b> — Quiz 🧩"
-        )
+        text = "🧠 AI Chat • Fun • Games 🤖💖"
 
     elif data == "help_group":
-        text = (
-            "⚙️ <b>Group Settings</b>\n\n"
-            "➤ <b>/welcome on/off</b>\n"
-            "➤ <b>/ping</b> — Bot status"
-        )
+        text = "⚙️ Group settings coming soon"
 
     elif data == "help_sudo":
         if query.from_user.id not in SUDO_USERS:
             return await query.answer("❌ Owner only!", show_alert=True)
         photo = SUDO_IMG
-        text = (
-            "🔐 <b>Owner Panel</b> 👑\n\n"
-            "➤ Add / Remove coins\n"
-            "➤ Broadcast messages\n"
-            "➤ Restart bot\n"
-            "➤ Database clean"
-        )
+        text = "🔐 <b>Owner Panel</b> 👑"
 
     await query.message.edit_media(
         InputMediaPhoto(
@@ -262,3 +250,13 @@ async def help_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ),
         reply_markup=keyboard,
     )
+
+# =========================
+# 🎮 COUPLE GAMES REGISTER
+# =========================
+
+def register_couple_games(application):
+    application.add_handler(CommandHandler("lovequiz", love_quiz))
+    application.add_handler(CommandHandler("truth", truth))
+    application.add_handler(CommandHandler("dare", dare))
+    application.add_handler(CommandHandler("lovescore", love_score))
