@@ -1,11 +1,11 @@
 import os
 
 # ================= BASIC =================
-BOT_NAME = os.getenv("BOT_NAME", "Anshi")
-OWNER_ID = int(os.getenv("OWNER_ID", "123456789"))  # admin telegram id
+BOT_NAME = os.getenv("BOT_NAME", "ᴀɴꜱʜɪᴋᴀ")
+OWNER_ID = int(os.getenv("OWNER_ID", "8211189367"))  # admin telegram id
 
 # ================= TELEGRAM =================
-BOT_TOKEN = os.getenv("BOT_TOKEN")
+BOT_TOKEN = os.getenv("8539332040:AAEwLvW469kL0L7a7aCv9EA3V6MN8ZX76jQ")
 
 # ================= DATABASE =================
 MONGO_URI = os.getenv("MONGO_URI")
@@ -28,7 +28,7 @@ PLANS = {
 }
 
 # ================= LOGGER =================
-LOGGER_GROUP = int(os.getenv("LOGGER_GROUP", "0"))  # optional
+LOGGER_GROUP = int(os.getenv("LOGGER_GROUP", "-1003605595874"))  # optional
 
 # ================= OTHER SETTINGS =================
 AUTO_REPLY = True
@@ -36,7 +36,6 @@ PREMIUM_ONLY_FLIRT = True
 
 
 # Game Constants
-BOT_NAME = "🫧ᴀɴꜱʜɪᴋᴀ ×͜࿐"
 REVIVE_COST = 500
 PROTECT_1D_COST = 1000
 PROTECT_2D_COST = 1800
