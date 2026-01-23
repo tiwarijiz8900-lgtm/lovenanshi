@@ -6,6 +6,7 @@ from telegram.constants import ChatAction, ChatType
 from anshi.jealous import jealous_reply
 from anshi.mood import mood_reply
 from Anshi.payments.upi import buy_premium, submit_utr
+from anshi.payments.approve import approve
 
 from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
 from anshi.database import chatbot_collection
@@ -159,5 +160,6 @@ application.add_handler(CommandHandler("start", start))
 application.add_handler(CommandHandler("buy", buy_premium))
 application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, submit_utr))
 application.add_handler(MessageHandler(filters.TEXT, chatbot_reply))
+application.add_handler(CommandHandler("approve", approve))
 
 application.run_polling()
