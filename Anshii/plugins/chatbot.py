@@ -7,6 +7,8 @@ from anshi.jealous import jealous_reply
 from anshi.mood import mood_reply
 from Anshi.payments.upi import buy_premium, submit_utr
 from anshi.payments.approve import approve
+from anshi.subscription import is_premium
+from anshi.subscription import activate_premium
 
 from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
 from anshi.database import chatbot_collection
