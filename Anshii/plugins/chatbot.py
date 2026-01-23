@@ -4,13 +4,14 @@ from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import ContextTypes
 from telegram.constants import ParseMode, ChatAction, ChatType
 from telegram.error import BadRequest
+from anshi.jealous import jealous_reply
 
-from baka.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
-from baka.database import chatbot_collection
-from baka.utils import stylize_text
+from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
+from anahi.database import chatbot_collection
+from anshi.utils import stylize_text
 
 # 🔥 XP SYSTEM IMPORT
-from baka.xp_system import award_xp
+from anshi.xp_system import award_xp
 
 # ================= SETTINGS =================
 MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions"
@@ -144,3 +145,7 @@ async def ask_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
         update.message.from_user.first_name
     )
     await update.message.reply_text(stylize_text(reply))
+       
+    # 😒 JEALOUS MODE CHECK
+    await jealous_reply(update, context)
+
