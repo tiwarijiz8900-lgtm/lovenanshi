@@ -1,7 +1,7 @@
 import os
 
 # ================= BASIC =================
-BOT_NAME = os.getenv("BOT_NAME", "LoveNanshi")
+BOT_NAME = os.getenv("BOT_NAME", "Anshi")
 OWNER_ID = int(os.getenv("OWNER_ID", "123456789"))  # admin telegram id
 
 # ================= TELEGRAM =================
@@ -36,7 +36,7 @@ PREMIUM_ONLY_FLIRT = True
 
 
 # Game Constants
-BOT_NAME = "🫧 ʙᴀᴋᴀ ×͜࿐"
+BOT_NAME = "🫧ᴀɴꜱʜɪᴋᴀ ×͜࿐"
 REVIVE_COST = 500
 PROTECT_1D_COST = 1000
 PROTECT_2D_COST = 1800
