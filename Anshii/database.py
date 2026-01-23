@@ -17,6 +17,7 @@ chatbot_collection = db["chatbot"]             # AI chat history
 riddles_collection = db["riddles"]             # riddles
 relationship_collection = db.relationships
 
+
 # ===============================
 # 🔐 SUBSCRIPTION / PREMIUM
 # ===============================
