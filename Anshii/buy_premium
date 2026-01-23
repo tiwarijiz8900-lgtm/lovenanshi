@@ -1,0 +1,15 @@
+text = f"""
+💎 *Premium Plans*
+
+🔹 Monthly – ₹99 (30 days)
+🔹 Yearly – ₹999 (365 days)
+
+📌 Pay via UPI
+━━━━━━━━━━━━━━
+🆔 `{UPI_ID}`
+━━━━━━━━━━━━━━
+
+Payment ke baad UTR bhejo
+Aur plan likho:
+👉 monthly / yearly
+"""
