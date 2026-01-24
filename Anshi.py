@@ -17,14 +17,16 @@ from telegram.request import HTTPXRequest
 # --- INTERNAL IMPORTS ---
 from anahi.config import TOKEN, PORT
 from anshi.utils import track_group, log_to_channel, BOT_NAME
+
+# --- IMPORT ALL PLUGINS ---
 from anshi.plugins import subscription, relationship_auto, memory
 from anshi.plugins import rooms
 from anshi.plugins import battle
 from anshi.plugins import wishes
 from anshi.plugins import couple_games
 from anshi.plugins import jealous
-
-# --- IMPORT ALL PLUGINS ---
+from anshi.plugins.payments import buy, submit_utr
+from anshi.plugins.admin_premium import approve
 from anahi.plugins import (
     start, economy, game, admin, broadcast, fun, events, 
     welcome, ping, chatbot, riddle, social, ai_media, 
@@ -177,6 +179,9 @@ if __name__ == '__main__':
         app_bot.add_handler(CommandHandler("buy", subscription.buy))
         app_bot.add_handler(CommandHandler("approve", subscription.approve))
         app_bot.add_handler(CommandHandler("myplan", subscription.myplan))
+        app_bot.add_handler(CommandHandler("buy", buy))
+app_bot.add_handler(CommandHandler("utr", submit_utr))
+app_bot.add_handler(CommandHandler("approve", approve))
 
        # --- MEMORY ---
 app_bot.add_handler(CommandHandler("memory", memory.show_memory))
