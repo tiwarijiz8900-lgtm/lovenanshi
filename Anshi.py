@@ -15,11 +15,11 @@ from telegram.ext import (
 from telegram.request import HTTPXRequest
 
 # --- INTERNAL IMPORTS ---
-from baka.config import TOKEN, PORT
-from baka.utils import track_group, log_to_channel, BOT_NAME
+from anahi.config import TOKEN, PORT
+from anshi.utils import track_group, log_to_channel, BOT_NAME
 
 # --- IMPORT ALL PLUGINS ---
-from baka.plugins import (
+from anahi.plugins import (
     start, economy, game, admin, broadcast, fun, events, 
     welcome, ping, chatbot, riddle, social, ai_media, 
     waifu, collection, shop, daily
@@ -193,7 +193,7 @@ if __name__ == '__main__':
         # 7. Track Group (Silent db update) - Group 5
         app_bot.add_handler(MessageHandler(filters.ChatType.GROUPS, events.group_tracker), group=5)
 
-        print("RyanBaka Bot Starting Polling...")
+        print("Loveanshi Bot Starting Polling...")
         
         # 8. Start Polling
         app_bot.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
