@@ -23,7 +23,9 @@ subscription_collection.create_index("user_id", unique=True)
 # 🔐 SUBSCRIPTION / PREMIUM
 # ===============================
 
+pending_payments_collection = db["pending_payments"]
 subscription_collection = db["subscriptions"]  # premium users
+
 # {
 #   user_id,
 #   plan: free / silver / gold / lifetime
