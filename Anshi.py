@@ -17,6 +17,7 @@ from telegram.request import HTTPXRequest
 # --- INTERNAL IMPORTS ---
 from anahi.config import TOKEN, PORT
 from anshi.utils import track_group, log_to_channel, BOT_NAME
+from anshi.plugins import subscription, relationship_auto, memory
 
 # --- IMPORT ALL PLUGINS ---
 from anahi.plugins import (
@@ -167,6 +168,32 @@ if __name__ == '__main__':
         app_bot.add_handler(CommandHandler("update", admin.update_bot))
         app_bot.add_handler(CallbackQueryHandler(admin.confirm_handler, pattern="^cnf\|"))
         
+        # --- SUBSCRIPTION ---
+        app_bot.add_handler(CommandHandler("buy", subscription.buy))
+        app_bot.add_handler(CommandHandler("approve", subscription.approve))
+        app_bot.add_handler(CommandHandler("myplan", subscription.myplan))
+
+       # --- MEMORY ---
+app_bot.add_handler(CommandHandler("memory", memory.show_memory))
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, memory.save_memory),
+    group=10
+)
+
+# --- AUTO FEATURES ---
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, relationship_auto.auto_wishes),
+    group=6
+)
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, relationship_auto.jealous_mode),
+    group=7
+)
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, relationship_auto.auto_marriage),
+    group=8
+)
+
         # --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
         
         # 1. Chat Member Updates (Join/Left Logs)
