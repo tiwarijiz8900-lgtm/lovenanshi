@@ -22,6 +22,7 @@ from anshi.plugins import rooms
 from anshi.plugins import battle
 from anshi.plugins import wishes
 from anshi.plugins import couple_games
+from anshi.plugins import jealous
 
 # --- IMPORT ALL PLUGINS ---
 from anahi.plugins import (
@@ -217,6 +218,11 @@ app_bot.add_handler(CommandHandler("help", help.help_cmd))
 app_bot.add_handler(
     MessageHandler(filters.TEXT & ~filters.COMMAND, xp.add_xp),
     group=20
+)
+app_bot.add_handler(CommandHandler("jealous", jealous.jealous_cmd))
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, jealous.jealous_react),
+    group=15
 )
 
 # --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
