@@ -210,6 +210,14 @@ app_bot.add_handler(CommandHandler("gm", wishes.gm))
 app_bot.add_handler(CommandHandler("gn", wishes.gn))
 app_bot.add_handler(CommandHandler("ge", wishes.ge))
 app_bot.add_handler(CommandHandler("love", wishes.love))
+app_bot.add_handler(CommandHandler("room", dating_room.room))
+app_bot.add_handler(CommandHandler("battle", couple_battle.battle))
+app_bot.add_handler(CommandHandler("acceptbattle", couple_battle.accept_battle))
+app_bot.add_handler(CommandHandler("help", help.help_cmd))
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, xp.add_xp),
+    group=20
+)
 
 # --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
         
