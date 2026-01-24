@@ -9,6 +9,7 @@ from Anshi.payments.upi import buy_premium, submit_utr
 from anshi.payments.approve import approve
 from anshi.subscription import is_premium
 from anshi.subscription import activate_premium
+from baka.plugins.subscription import is_premium
 
 from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
 from anshi.database import chatbot_collection
@@ -30,7 +31,7 @@ MAX_HISTORY = 12
 # ===========================================
 
 FALLBACK_RESPONSES = [
-    "Achha ji? (⁠•⁠‿⁠•⁠)",
+    "Achha ji?",
     "Okk okk!",
     "Hmm… aur batao 💕",
     "Sunao na 😌",
@@ -157,6 +158,8 @@ async def ask_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply = f"{reply}\n\n{mood_text}"
 
     await update.message.reply_text(stylize_text(reply))
+
+return await update.message.reply_text("🔒 Premium only feature\nUse /buy")
 
 application.add_handler(CommandHandler("start", start))
 application.add_handler(CommandHandler("buy", buy_premium))
