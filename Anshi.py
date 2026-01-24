@@ -30,7 +30,7 @@ from anshi.plugins.admin_premium import approve
 from anahi.plugins import (
     start, economy, game, admin, broadcast, fun, events, 
     welcome, ping, chatbot, riddle, social, ai_media, 
-    waifu, collection, shop, daily, couple_vs_couple, help_plugin, leaderboard, upi,
+    waifu, collection, shop, daily, couple_vs_couple, help, leaderboard, upi,
 )
 
 # --- FLASK SERVER (Health Check) ---
