@@ -18,6 +18,8 @@ from telegram.request import HTTPXRequest
 from anahi.config import TOKEN, PORT
 from anshi.utils import track_group, log_to_channel, BOT_NAME
 from anshi.plugins import subscription, relationship_auto, memory
+from anshi.plugins import rooms
+from anshi.plugins import battle
 
 # --- IMPORT ALL PLUGINS ---
 from anahi.plugins import (
@@ -194,7 +196,12 @@ app_bot.add_handler(
     group=8
 )
 
-        # --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
+app_bot.add_handler(CommandHandler("battle", battle.battle))
+app_bot.add_handler(CommandHandler("acceptbattle", battle.acceptbattle))
+app_bot.add_handler(CommandHandler("rejectbattle", battle.rejectbattle))
+app_bot.add_handler(CommandHandler("room", rooms.room))      
+
+# --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
         
         # 1. Chat Member Updates (Join/Left Logs)
         app_bot.add_handler(ChatMemberHandler(events.chat_member_update, ChatMemberHandler.MY_CHAT_MEMBER))
