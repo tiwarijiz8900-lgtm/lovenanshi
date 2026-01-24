@@ -225,6 +225,11 @@ app_bot.add_handler(
     group=15
 )
 
+app_bot.add_handler(
+    MessageHandler(filters.TEXT & ~filters.COMMAND, wishes.wishes),
+    group=14
+)
+
 # --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
         
         # 1. Chat Member Updates (Join/Left Logs)
