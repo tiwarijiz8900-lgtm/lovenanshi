@@ -16,7 +16,8 @@ sudoers_collection = db["sudoers"]             # sudo admins
 chatbot_collection = db["chatbot"]             # AI chat history
 riddles_collection = db["riddles"]             # riddles
 relationship_collection = db.relationships
-
+subscription_collection = db.subscription
+subscription_collection.create_index("user_id", unique=True)
 
 # ===============================
 # 🔐 SUBSCRIPTION / PREMIUM
