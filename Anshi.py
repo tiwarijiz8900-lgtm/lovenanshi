@@ -20,6 +20,8 @@ from anshi.utils import track_group, log_to_channel, BOT_NAME
 from anshi.plugins import subscription, relationship_auto, memory
 from anshi.plugins import rooms
 from anshi.plugins import battle
+from anshi.plugins import wishes
+from anshi.plugins import couple_games
 
 # --- IMPORT ALL PLUGINS ---
 from anahi.plugins import (
@@ -200,6 +202,14 @@ app_bot.add_handler(CommandHandler("battle", battle.battle))
 app_bot.add_handler(CommandHandler("acceptbattle", battle.acceptbattle))
 app_bot.add_handler(CommandHandler("rejectbattle", battle.rejectbattle))
 app_bot.add_handler(CommandHandler("room", rooms.room))      
+app_bot.add_handler(CommandHandler("couplegame", couple_games.couplegame))
+app_bot.add_handler(CommandHandler("truth", couple_games.truth))
+app_bot.add_handler(CommandHandler("dare", couple_games.dare))
+app_bot.add_handler(CommandHandler("lovepercent", couple_games.lovepercent))
+app_bot.add_handler(CommandHandler("gm", wishes.gm))
+app_bot.add_handler(CommandHandler("gn", wishes.gn))
+app_bot.add_handler(CommandHandler("ge", wishes.ge))
+app_bot.add_handler(CommandHandler("love", wishes.love))
 
 # --- EVENTS & MESSAGE LISTENERS (ORDER IS CRITICAL) ---
         
