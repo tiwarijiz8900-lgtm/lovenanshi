@@ -30,7 +30,7 @@ from anshi.plugins.admin_premium import approve
 from anahi.plugins import (
     start, economy, game, admin, broadcast, fun, events, 
     welcome, ping, chatbot, riddle, social, ai_media, 
-    waifu, collection, shop, daily, couple_vs_couple, leaderboard,
+    waifu, collection, shop, daily, couple_vs_couple, leaderboard, upi,
 )
 
 # --- FLASK SERVER (Health Check) ---
@@ -222,6 +222,9 @@ app_bot.add_handler(CommandHandler("acceptbattle", couple_battle.accept_battle))
 application.add_handler(CommandHandler("cb", couple_battle.couple_battle))
 application.add_handler(CommandHandler("leaderboard", leaderboard.leaderboard))
 application.add_handler(CommandHandler("top", leaderboard.leaderboard))
+application.add_handler(CommandHandler("buy", upi.buy))
+application.add_handler(CommandHandler("approve", upi.approve))
+application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, upi.submit_utr))
 
 app_bot.add_handler(CommandHandler("help", help.help_cmd))
 app_bot.add_handler(
