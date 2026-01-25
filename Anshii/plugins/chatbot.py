@@ -17,6 +17,7 @@ from telegram.constants import ChatAction, ChatType
 # ================= CONFIG =================
 from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
 from anshi.database import chatbot_collection, couple_battle_collection
+from anshi.plugins.couple_battle import couple_battle_start
 
 # ================= SYSTEMS =================
 from anshi.subscription import is_premium
