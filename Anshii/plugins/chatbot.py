@@ -25,6 +25,7 @@ from anshi.xp_system import award_xp
 from anshi.mood import mood_reply
 from anshi.jealous import jealous_reply
 from anshi.utils import stylize_text
+from anshi.plugins.couple_battle import couple_battle_start
 
 # ================= AI SETTINGS =================
 MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions"
