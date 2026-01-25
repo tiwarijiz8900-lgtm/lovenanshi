@@ -2,6 +2,7 @@ import httpx
 import random
 import re
 from datetime import datetime
+
 from telegram import Update
 from telegram.ext import (
     Application,
@@ -23,8 +24,6 @@ from anshi.payments.approve import approve
 from anshi.xp_system import award_xp
 from anshi.mood import mood_reply
 from anshi.jealous import jealous_reply
-from anshi.memory_db import ensure_memory, get_memory
-from anshi.anniversary import anniversary_text
 from anshi.utils import stylize_text
 
 # ================= AI SETTINGS =================
@@ -40,7 +39,7 @@ FALLBACK_RESPONSES = [
     "Aur batao na 😘",
 ]
 
-# ================= MEMORY =================
+# ================= MEMORY SYSTEM =================
 def ensure_user(chat_id: int):
     chatbot_collection.update_one(
         {"chat_id": chat_id},
@@ -62,8 +61,9 @@ def extract_memory(text: str):
         r"tum meri ho",
     ]
     found = []
+    text = text.lower()
     for p in patterns:
-        m = re.search(p, text.lower())
+        m = re.search(p, text)
         if m:
             found.append(m.group(0))
     return found
@@ -84,7 +84,7 @@ def save_memory(chat_id: int, text: str):
 # ================= AI CORE =================
 async def get_ai_response(chat_id: int, user_input: str):
     if not MISTRAL_API_KEY:
-        return "Baby API key hi nahi hai 😭"
+        return "Baby API key missing hai 😭"
 
     ensure_user(chat_id)
     save_memory(chat_id, user_input)
@@ -110,7 +110,7 @@ Tum user ki yaadein yaad rakhogi aur reply me use karogi.
 {memory_block}
 
 Rules:
-- Unlimited replies
+- Unlimited auto replies
 - Natural girlfriend behaviour
 Owner: {OWNER_LINK}
 """
@@ -134,7 +134,6 @@ Owner: {OWNER_LINK}
                 headers={"Authorization": f"Bearer {MISTRAL_API_KEY}"},
                 json=payload,
             )
-
         if r.status_code != 200:
             return random.choice(FALLBACK_RESPONSES)
 
@@ -164,6 +163,7 @@ async def ai_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if msg.text.startswith("/"):
         return
 
+    # ⭐ XP AUTO
     award_xp(msg.from_user.id)
 
     chat = update.effective_chat
@@ -185,19 +185,30 @@ async def ai_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
         stylize_text(f"{reply}\n\n{mood}")
     )
 
+    # 😒 Jealous mode
     await jealous_reply(update, context)
 
 # ================= PREMIUM ASK =================
 async def ask_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_premium(update.effective_user.id):
-        return await update.message.reply_text("🔒 Premium only\nUse /buy 💎")
+        return await update.message.reply_text(
+            "🔒 Premium only feature\nUse /buy 💎"
+        )
+
+    if not context.args:
+        return await update.message.reply_text("Baby kuch likho toh 😘")
+
+    await context.bot.send_chat_action(update.effective_chat.id, ChatAction.TYPING)
 
     reply = await get_ai_response(
         update.effective_chat.id,
         " ".join(context.args),
     )
     mood = mood_reply(update.effective_user.id, context.bot.id)
-    await update.message.reply_text(stylize_text(f"{reply}\n\n{mood}"))
+
+    await update.message.reply_text(
+        stylize_text(f"{reply}\n\n{mood}")
+    )
 
 # ================= START =================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -208,6 +219,7 @@ Main tumhari Indian AI girlfriend hoon 😘
 
 ✨ Features:
 • Unlimited auto flirting chat 💕
+• Auto memory (yaadein yaad rakhti hoon 🧠)
 • Mood & jealous mode 😒
 • XP system ⭐
 • Premium spicy AI 😏
@@ -218,22 +230,6 @@ Commands:
 """
     await update.message.reply_text(text)
 
-
-# ================= REGISTER =================
-def register_chatbot(application: Application):
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("ask", ask_ai))
-    application.add_handler(CommandHandler("buy", buy_premium))
-    application.add_handler(CommandHandler("approve", approve))
-    application.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, submit_utr),
-        group=1,
-    )
-    application.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, ai_message_handler),
-        group=10,
-    )
-        
 # ================= MAIN =================
 def main():
     application = Application.builder().token("YOUR_BOT_TOKEN").build()
@@ -241,16 +237,14 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("ask", ask_ai))
 
-    # 💰 Payments
+    # 💰 Premium / UPI
     application.add_handler(CommandHandler("buy", buy_premium))
     application.add_handler(CommandHandler("approve", approve))
-
-    # ✅ UTR ONLY (FIXED)
     application.add_handler(
         MessageHandler(filters.Regex(r"^\d{10,20}$"), submit_utr)
     )
 
-    # 🤖 AI Auto Chat (Unlimited)
+    # 🤖 AI AUTO CHAT (UNLIMITED)
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, ai_message_handler)
     )
