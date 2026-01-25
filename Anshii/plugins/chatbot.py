@@ -216,6 +216,40 @@ async def battle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await query.edit_message_text(text)
 
+# ================= COUPLE BATTLE LEADERBOARD =================
+async def couple_battle_leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    top = (
+        couple_battle_collection
+        .find()
+        .sort("score", -1)
+        .limit(10)
+    )
+
+    if couple_battle_collection.count_documents({}) == 0:
+        return await update.message.reply_text(
+            "😕 Abhi koi Couple Battle nahi hua hai"
+        )
+
+    text = "🏆 *Couple Battle Leaderboard* 🏆\n\n"
+    rank = 1
+
+    for user in top:
+        try:
+            tg_user = await context.bot.get_chat(user["user_id"])
+            name = tg_user.first_name
+        except:
+            name = "Unknown"
+
+        score = user.get("score", 0)
+
+        text += f"{rank}. 💑 {name} — 🔥 {score} points\n"
+        rank += 1
+
+    await update.message.reply_text(
+        text,
+        parse_mode="Markdown"
+    )
+
 # ================= START =================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -250,6 +284,7 @@ def main():
     app.add_handler(CommandHandler("buy", buy_premium))
     app.add_handler(CommandHandler("approve", approve))
     app.add_handler(CommandHandler("battle", couple_battle))
+    app.add_handler(CommandHandler("battleboard", couple_battle_leaderboard))
 
     app.add_handler(CallbackQueryHandler(battle_callback))
 
