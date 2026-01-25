@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import certifi
 from Anshi.config import MONGO_URI
+from anshi.plugins.couple_battle import couple_battle_start
 
 # Initialize Mongo Connection
 Anshi = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
