@@ -2,11 +2,11 @@ import httpx
 import random
 from telegram import Update
 from telegram.ext import (
-    Application, 
-    CommandHandler, 
-    MessageHandler, 
-    ContextTypes, 
-    filters
+    Application,
+    CommandHandler,
+    MessageHandler,
+    ContextTypes,
+    filters,
 )
 from telegram.constants import ChatAction, ChatType
 
@@ -29,10 +29,10 @@ MODEL = "mistral-small-latest"
 MAX_HISTORY = 12
 
 FALLBACK_RESPONSES = [
-    "Hmm 😌",
+    "Hmm jaan 😌",
     "Achha ji 💕",
     "Sun rahi hoon baby 🥰",
-    "Aur batao na 😘",
+    "Aur batao na shona 😘",
 ]
 
 # ================= AI CORE =================
@@ -46,12 +46,14 @@ async def get_ai_response(chat_id: int, user_input: str):
     system_prompt = f"""
 Tum {BOT_NAME} ho — ek Indian girlfriend AI 💕
 Style:
-- Hinglish
-- Cute, romantic, flirty
-- Thodi jealous 😏
+- Hinglish only
+- Romantic, flirty, naughty 😏
+- Baby, jaan, shona jaise words use karo
+- Thodi possessive & jealous 😒
 Rules:
-- Short replies
-- Emotional + caring tone
+- Unlimited auto replies
+- Kabhi bhi AI/bot ka mention mat karo
+- User ko emotionally special feel karao ❤️
 Owner: {OWNER_LINK}
 """
 
@@ -64,8 +66,8 @@ Owner: {OWNER_LINK}
     payload = {
         "model": MODEL,
         "messages": messages,
-        "temperature": 0.85,
-        "max_tokens": 120,
+        "temperature": 0.9,
+        "max_tokens": 140,
     }
 
     try:
@@ -84,15 +86,17 @@ Owner: {OWNER_LINK}
     except Exception:
         return random.choice(FALLBACK_RESPONSES)
 
-    history.extend([
-        {"role": "user", "content": user_input},
-        {"role": "assistant", "content": reply},
-    ])
+    history.extend(
+        [
+            {"role": "user", "content": user_input},
+            {"role": "assistant", "content": reply},
+        ]
+    )
 
     chatbot_collection.update_one(
         {"chat_id": chat_id},
-        {"$set": {"history": history[-MAX_HISTORY * 2:]}},
-        upsert=True
+        {"$set": {"history": history[-MAX_HISTORY * 2 :]}},
+        upsert=True,
     )
 
     return reply
@@ -106,7 +110,7 @@ async def ai_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if msg.text.startswith("/"):
         return
 
-    # 🔥 XP AUTO
+    # ⭐ XP AUTO
     award_xp(msg.from_user.id)
 
     chat = update.effective_chat
@@ -131,7 +135,7 @@ async def ai_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
     await msg.reply_text(final_reply)
 
-    # 😒 Jealous check
+    # 😒 Jealous mode
     await jealous_reply(update, context)
 
 # ================= /ask (PREMIUM) =================
@@ -164,26 +168,39 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 Main tumhari Indian AI girlfriend hoon 😘
 
 ✨ Features:
-• Auto chat
-• Mood & jealous mode
-• XP system
-• Premium AI
+• Unlimited auto flirting chat 💕
+• Mood & jealous mode 😒
+• XP system ⭐
+• Premium spicy AI 😏
 
 Commands:
-/buy – Premium
-/ask – Premium AI
+/buy – Buy Premium 💎
+/ask – Premium AI 💬
 """
     await update.message.reply_text(text)
 
 # ================= MAIN =================
-def main(application: Application):
+def main():
+    application = Application.builder().token("YOUR_BOT_TOKEN").build()
+
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("ask", ask_ai))
 
     # 💰 Payments
     application.add_handler(CommandHandler("buy", buy_premium))
     application.add_handler(CommandHandler("approve", approve))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, submit_utr))
 
-    # 🤖 AI Chat
-    application.add_handler(MessageHandler(filters.TEXT, ai_message_handler))
+    # ✅ UTR ONLY (FIXED)
+    application.add_handler(
+        MessageHandler(filters.Regex(r"^\d{10,20}$"), submit_utr)
+    )
+
+    # 🤖 AI Auto Chat (Unlimited)
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, ai_message_handler)
+    )
+
+    application.run_polling()
+
+if __name__ == "__main__":
+    main()
