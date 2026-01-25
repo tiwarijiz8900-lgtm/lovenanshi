@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 import certifi
 from Anshi.config import MONGO_URI
-from anshi.plugins.couple_battle import couple_battle_start
 
 # Initialize Mongo Connection
 Anshi = MongoClient(MONGO_URI, tlsCAFile=certifi.where())
@@ -17,6 +16,7 @@ sudoers_collection = db["sudoers"]             # sudo admins
 chatbot_collection = db["chatbot"]             # AI chat history
 riddles_collection = db["riddles"]             # riddles
 relationship_collection = db.relationships
+couple_battle_collection = db.couple_battles
 subscription_collection = db.subscription
 subscription_collection.create_index("user_id", unique=True)
 
