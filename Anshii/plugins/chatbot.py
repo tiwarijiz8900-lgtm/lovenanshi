@@ -261,6 +261,7 @@ Commands:
 /buy – Premium 💎
 /ask – Premium AI
 /battle – Couple Battle 🔥
+/battleboard – Battle Leaderboard 🏆
 """
     )
 
@@ -281,10 +282,12 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("ask", ask_ai))
+    
+    application.add_handler(CommandHandler("battle", couple_battle))
+    application.add_handler(CommandHandler("battleboard", couple_battle_leaderboard))
+
     app.add_handler(CommandHandler("buy", buy_premium))
     app.add_handler(CommandHandler("approve", approve))
-    app.add_handler(CommandHandler("battle", couple_battle))
-    app.add_handler(CommandHandler("battleboard", couple_battle_leaderboard))
 
     app.add_handler(CallbackQueryHandler(battle_callback))
 
