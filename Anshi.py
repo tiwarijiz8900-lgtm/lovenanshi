@@ -125,7 +125,7 @@ if __name__ == "__main__":
     app_bot.add_handler(CommandHandler("gn", wishes.gn))
     app_bot.add_handler(CommandHandler("ge", wishes.ge))
     app_bot.add_handler(CommandHandler("love", wishes.love))
-
+     
     # ================= MEMORY =================
     app_bot.add_handler(CommandHandler("memory", memory.show_memory))
     app_bot.add_handler(
@@ -139,6 +139,8 @@ if __name__ == "__main__":
         MessageHandler(filters.TEXT & ~filters.COMMAND, jealous.jealous_react),
         group=4
     )
+
+    application.add_handler(CommandHandler("setname", setname))
 
     # ================= AI CHAT (LAST) =================
     app_bot.add_handler(
