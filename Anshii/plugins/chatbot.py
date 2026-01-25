@@ -23,6 +23,8 @@ from anshi.payments.approve import approve
 from anshi.xp_system import award_xp
 from anshi.mood import mood_reply
 from anshi.jealous import jealous_reply
+from anshi.memory_db import ensure_memory, get_memory
+from anshi.anniversary import anniversary_text
 from anshi.utils import stylize_text
 
 # ================= AI SETTINGS =================
