@@ -247,8 +247,23 @@ def main():
     # 🤖 AI AUTO CHAT (UNLIMITED)
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, ai_message_handler)
-    )
+   user = msg.from_user
+ensure_memory(user.id)
 
+mem = get_memory(user.id)
+nickname = mem.get("nickname") if mem else None
+
+reply = await get_ai_response(chat.id, msg.text)
+
+if nickname:
+    reply = reply.replace(user.first_name, nickname)
+
+anni = anniversary_text(user.id)
+if anni:
+    reply = f"{reply}\n\n{anni}"
+
+    )
+    
     application.run_polling()
 
 if __name__ == "__main__":
