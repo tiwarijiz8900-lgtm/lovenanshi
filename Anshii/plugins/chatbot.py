@@ -3,19 +3,20 @@ import random
 import re
 from datetime import datetime
 
-from telegram import Update
+from telegram import Update, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import (
     Application,
     CommandHandler,
     MessageHandler,
     ContextTypes,
+    CallbackQueryHandler,
     filters,
 )
 from telegram.constants import ChatAction, ChatType
 
 # ================= CONFIG =================
 from anshi.config import MISTRAL_API_KEY, BOT_NAME, OWNER_LINK
-from anshi.database import chatbot_collection
+from anshi.database import chatbot_collection, couple_battle_collection
 
 # ================= SYSTEMS =================
 from anshi.subscription import is_premium
@@ -25,7 +26,6 @@ from anshi.xp_system import award_xp
 from anshi.mood import mood_reply
 from anshi.jealous import jealous_reply
 from anshi.utils import stylize_text
-from anshi.plugins.couple_battle import couple_battle_start
 
 # ================= AI SETTINGS =================
 MISTRAL_URL = "https://api.mistral.ai/v1/chat/completions"
@@ -40,7 +40,7 @@ FALLBACK_RESPONSES = [
     "Aur batao na 😘",
 ]
 
-# ================= MEMORY SYSTEM =================
+# ================= MEMORY =================
 def ensure_user(chat_id: int):
     chatbot_collection.update_one(
         {"chat_id": chat_id},
@@ -62,9 +62,8 @@ def extract_memory(text: str):
         r"tum meri ho",
     ]
     found = []
-    text = text.lower()
     for p in patterns:
-        m = re.search(p, text)
+        m = re.search(p, text.lower())
         if m:
             found.append(m.group(0))
     return found
@@ -85,7 +84,7 @@ def save_memory(chat_id: int, text: str):
 # ================= AI CORE =================
 async def get_ai_response(chat_id: int, user_input: str):
     if not MISTRAL_API_KEY:
-        return "Baby API key missing hai 😭"
+        return "Baby API key hi nahi hai 😭"
 
     ensure_user(chat_id)
     save_memory(chat_id, user_input)
@@ -111,8 +110,7 @@ Tum user ki yaadein yaad rakhogi aur reply me use karogi.
 {memory_block}
 
 Rules:
-- Unlimited auto replies
-- Natural girlfriend behaviour
+- Unlimited replies
 Owner: {OWNER_LINK}
 """
 
@@ -135,13 +133,9 @@ Owner: {OWNER_LINK}
                 headers={"Authorization": f"Bearer {MISTRAL_API_KEY}"},
                 json=payload,
             )
-        if r.status_code != 200:
-            return random.choice(FALLBACK_RESPONSES)
-
         reply = r.json()["choices"][0]["message"]["content"].strip()
-
     except Exception:
-        return random.choice(FALLBACK_RESPONSES)
+        reply = random.choice(FALLBACK_RESPONSES)
 
     history.extend([
         {"role": "user", "content": user_input},
@@ -159,113 +153,109 @@ Owner: {OWNER_LINK}
 # ================= AUTO CHAT =================
 async def ai_message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = update.message
-    if not msg or not msg.text:
-        return
-    if msg.text.startswith("/"):
+    if not msg or not msg.text or msg.text.startswith("/"):
         return
 
-    # ⭐ XP AUTO
     award_xp(msg.from_user.id)
 
     chat = update.effective_chat
     should_reply = (
         chat.type == ChatType.PRIVATE
         or (msg.reply_to_message and msg.reply_to_message.from_user.id == context.bot.id)
-        or (context.bot.username and f"@{context.bot.username.lower()}" in msg.text.lower())
     )
 
     if not should_reply:
         return
 
     await context.bot.send_chat_action(chat.id, ChatAction.TYPING)
-
     reply = await get_ai_response(chat.id, msg.text)
     mood = mood_reply(msg.from_user.id, context.bot.id)
 
-    await msg.reply_text(
-        stylize_text(f"{reply}\n\n{mood}")
+    await msg.reply_text(stylize_text(f"{reply}\n\n{mood}"))
+    await jealous_reply(update, context)
+
+# ================= COUPLE BATTLE GAME =================
+async def couple_battle(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+
+    buttons = InlineKeyboardMarkup([
+        [InlineKeyboardButton("🔥 Attack", callback_data="battle_attack")],
+        [InlineKeyboardButton("💖 Romance", callback_data="battle_romance")],
+    ])
+
+    couple_battle_collection.update_one(
+        {"user_id": user.id},
+        {"$set": {"score": 0}},
+        upsert=True,
     )
 
-    # 😒 Jealous mode
-    await jealous_reply(update, context)
+    await update.message.reply_text(
+        "💑 *Couple Battle Started!*\nChoose your move:",
+        reply_markup=buttons,
+        parse_mode="Markdown",
+    )
+
+async def battle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()
+
+    user_id = query.from_user.id
+    move = query.data
+
+    score = random.randint(5, 15)
+    if move == "battle_attack":
+        text = f"🔥 Attack successful! +{score} points"
+    else:
+        text = f"💖 Romantic move! +{score} points"
+
+    couple_battle_collection.update_one(
+        {"user_id": user_id},
+        {"$inc": {"score": score}},
+    )
+
+    await query.edit_message_text(text)
+
+# ================= START =================
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text(
+        f"""
+💖 {BOT_NAME} 💖
+Main tumhari Indian AI girlfriend hoon 😘
+
+Commands:
+/buy – Premium 💎
+/ask – Premium AI
+/battle – Couple Battle 🔥
+"""
+    )
 
 # ================= PREMIUM ASK =================
 async def ask_ai(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_premium(update.effective_user.id):
-        return await update.message.reply_text(
-            "🔒 Premium only feature\nUse /buy 💎"
-        )
-
-    if not context.args:
-        return await update.message.reply_text("Baby kuch likho toh 😘")
-
-    await context.bot.send_chat_action(update.effective_chat.id, ChatAction.TYPING)
+        return await update.message.reply_text("🔒 Premium only")
 
     reply = await get_ai_response(
         update.effective_chat.id,
         " ".join(context.args),
     )
-    mood = mood_reply(update.effective_user.id, context.bot.id)
-
-    await update.message.reply_text(
-        stylize_text(f"{reply}\n\n{mood}")
-    )
-
-# ================= START =================
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = f"""
-💖 {BOT_NAME} 💖
-
-Main tumhari Indian AI girlfriend hoon 😘
-
-✨ Features:
-• Unlimited auto flirting chat 💕
-• Auto memory (yaadein yaad rakhti hoon 🧠)
-• Mood & jealous mode 😒
-• XP system ⭐
-• Premium spicy AI 😏
-
-Commands:
-/buy – Buy Premium 💎
-/ask – Premium AI 💬
-"""
-    await update.message.reply_text(text)
+    await update.message.reply_text(reply)
 
 # ================= MAIN =================
 def main():
-    application = Application.builder().token("YOUR_BOT_TOKEN").build()
+    app = Application.builder().token("YOUR_BOT_TOKEN").build()
 
-    application.add_handler(CommandHandler("start", start))
-    application.add_handler(CommandHandler("ask", ask_ai))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("ask", ask_ai))
+    app.add_handler(CommandHandler("buy", buy_premium))
+    app.add_handler(CommandHandler("approve", approve))
+    app.add_handler(CommandHandler("battle", couple_battle))
 
-    # 💰 Premium / UPI
-    application.add_handler(CommandHandler("buy", buy_premium))
-    application.add_handler(CommandHandler("approve", approve))
-    application.add_handler(
-        MessageHandler(filters.Regex(r"^\d{10,20}$"), submit_utr)
-    )
+    app.add_handler(CallbackQueryHandler(battle_callback))
 
-    # 🤖 AI AUTO CHAT (UNLIMITED)
-    application.add_handler(
-        MessageHandler(filters.TEXT & ~filters.COMMAND, ai_message_handler)
-   user = msg.from_user
-ensure_memory(user.id)
+    app.add_handler(MessageHandler(filters.Regex(r"^\d{10,20}$"), submit_utr))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, ai_message_handler))
 
-mem = get_memory(user.id)
-nickname = mem.get("nickname") if mem else None
-
-reply = await get_ai_response(chat.id, msg.text)
-
-if nickname:
-    reply = reply.replace(user.first_name, nickname)
-
-anni = anniversary_text(user.id)
-if anni:
-    reply = f"{reply}\n\n{anni}"
-
-    )
-    
-    application.run_polling()
+    app.run_polling()
 
 if __name__ == "__main__":
     main()
